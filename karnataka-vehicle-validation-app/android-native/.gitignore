@@ -2,6 +2,9 @@
 .gradle/
 .kotlin/
 local.properties
+signing.properties
+keystore/
+*.jks
 .idea/
 /build/
 /captures/
