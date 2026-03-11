@@ -46,15 +46,11 @@ class ResultAdapter : RecyclerView.Adapter<ResultAdapter.ResultViewHolder>() {
             binding.detailText.text = buildString {
                 appendLine("Reg Date: ${record.registrationDate}")
                 appendLine("Test Date: ${record.testDate} ${record.testTime}".trim())
-                appendLine()
                 appendLine("Valid Date: ${record.validDate}")
-                appendLine()
                 appendLine("HSU Mean: ${record.hsuMean}")
                 appendLine("K Mean: ${record.kMean}")
-                appendLine()
                 appendLine("Oil Temp: ${record.oilTempMean}")
                 appendLine("RPM Max: ${record.rpmMaxMean}")
-                appendLine()
                 appendLine("RPM Min: ${record.rpmMinMean}")
                 append("Cancelled: ${record.cancelled}")
             }
