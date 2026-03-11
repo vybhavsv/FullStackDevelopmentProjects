@@ -32,7 +32,9 @@ class ResultAdapter : RecyclerView.Adapter<ResultAdapter.ResultViewHolder>() {
     class ResultViewHolder(private val binding: ItemRecordBinding) : RecyclerView.ViewHolder(binding.root) {
         fun bind(record: PucRecord) {
             binding.puccNumberText.text = record.puccNumber.ifBlank { record.registrationNumber }
-            binding.vehicleText.text = "${record.registrationNumber} • ${record.make} • ${record.category}"
+            binding.stationText.text = record.make.ifBlank { "Vehicle details available" }
+            binding.registrationText.text = record.registrationNumber.ifBlank { "Registration not listed" }
+            binding.makeText.text = record.category.ifBlank { "Make not listed" }
             binding.resultChipText.text = record.result.ifBlank { "Available" }
             binding.resultChipText.setTextColor(
                 when (record.result.trim().uppercase()) {
@@ -43,11 +45,18 @@ class ResultAdapter : RecyclerView.Adapter<ResultAdapter.ResultViewHolder>() {
             )
             binding.detailText.text = buildString {
                 appendLine("Reg Date: ${record.registrationDate}")
-                appendLine("Test Date: ${record.testDate} ${record.testTime}")
+                appendLine("Test Date: ${record.testDate} ${record.testTime}".trim())
+                appendLine()
                 appendLine("Valid Date: ${record.validDate}")
-                appendLine("HSU Mean: ${record.hsuMean}   K Mean: ${record.kMean}")
-                appendLine("Oil Temp: ${record.oilTempMean}   RPM Max: ${record.rpmMaxMean}")
-                append("RPM Min: ${record.rpmMinMean}   Cancelled: ${record.cancelled}")
+                appendLine()
+                appendLine("HSU Mean: ${record.hsuMean}")
+                appendLine("K Mean: ${record.kMean}")
+                appendLine()
+                appendLine("Oil Temp: ${record.oilTempMean}")
+                appendLine("RPM Max: ${record.rpmMaxMean}")
+                appendLine()
+                appendLine("RPM Min: ${record.rpmMinMean}")
+                append("Cancelled: ${record.cancelled}")
             }
 
             if (record.detailsUrl.isNotBlank()) {

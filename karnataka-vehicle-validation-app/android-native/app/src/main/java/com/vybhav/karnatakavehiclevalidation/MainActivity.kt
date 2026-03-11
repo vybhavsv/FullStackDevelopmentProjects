@@ -4,6 +4,8 @@ import android.os.Bundle
 import android.view.inputmethod.EditorInfo
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.view.ViewCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -22,6 +24,8 @@ class MainActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        applyWindowInsets()
 
         binding.resultsRecyclerView.apply {
             layoutManager = LinearLayoutManager(this@MainActivity)
@@ -55,15 +59,16 @@ class MainActivity : AppCompatActivity() {
         lifecycleScope.launch {
             runCatching { repository.lookupVehicle(normalized) }
                 .onSuccess { result -> renderLookupResult(result) }
-                .onFailure {
+                .onFailure { throwable ->
                     binding.summaryCard.isVisible = true
                     binding.statusText.text = getString(R.string.status_error)
                     binding.matchedFuelText.text = "-"
                     binding.recordCountText.text = "0"
                     binding.validDateText.text = "-"
+                    binding.messageText.isVisible = true
                     binding.messageText.text = getString(R.string.status_error)
                     resultAdapter.submitList(emptyList())
-                    Toast.makeText(this@MainActivity, it.message ?: getString(R.string.status_error), Toast.LENGTH_LONG).show()
+                    Toast.makeText(this@MainActivity, throwable.message ?: getString(R.string.status_error), Toast.LENGTH_LONG).show()
                 }
             showLoading(false)
         }
@@ -79,23 +84,43 @@ class MainActivity : AppCompatActivity() {
         binding.matchedFuelText.text = result.matchedFuelType?.name?.lowercase()?.replaceFirstChar(Char::titlecase) ?: "No match"
         binding.recordCountText.text = result.records.size.toString()
         binding.validDateText.text = result.records.firstOrNull()?.validDate?.ifBlank { "-" } ?: "-"
-        binding.messageText.text = if (result.hasResults) {
-            "Showing results for ${result.normalizedRegistration}"
-        } else {
-            getString(R.string.status_no_match)
-        }
+        binding.messageText.isVisible = false
         resultAdapter.submitList(result.records)
     }
 
     private fun setIdleState() {
         binding.summaryCard.isVisible = false
         binding.progressBar.isVisible = false
+        binding.messageText.isVisible = true
         binding.messageText.text = getString(R.string.status_idle)
     }
 
     private fun showLoading(isLoading: Boolean) {
         binding.progressBar.isVisible = isLoading
         binding.checkButton.isEnabled = !isLoading
-        binding.messageText.text = if (isLoading) getString(R.string.status_loading) else getString(R.string.status_idle)
+        if (isLoading) {
+            binding.messageText.isVisible = true
+            binding.messageText.text = getString(R.string.status_loading)
+        } else if (!binding.summaryCard.isVisible && resultAdapter.itemCount == 0) {
+            binding.messageText.isVisible = true
+            binding.messageText.text = getString(R.string.status_idle)
+        }
+    }
+
+    private fun applyWindowInsets() {
+        val horizontalPadding = (16 * resources.displayMetrics.density).toInt()
+        val bottomPadding = (16 * resources.displayMetrics.density).toInt()
+        val topPadding = (16 * resources.displayMetrics.density).toInt()
+
+        ViewCompat.setOnApplyWindowInsetsListener(binding.rootLayout) { view, insets ->
+            val statusBars = insets.getInsets(WindowInsetsCompat.Type.statusBars())
+            view.setPadding(
+                horizontalPadding,
+                topPadding + statusBars.top,
+                horizontalPadding,
+                bottomPadding,
+            )
+            insets
+        }
     }
 }

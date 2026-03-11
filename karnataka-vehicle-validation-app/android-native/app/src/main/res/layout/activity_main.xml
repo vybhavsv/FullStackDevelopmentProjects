@@ -1,10 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/rootLayout"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/surface_soft"
-    android:padding="16dp">
+    android:paddingStart="16dp"
+    android:paddingTop="16dp"
+    android:paddingEnd="16dp"
+    android:paddingBottom="16dp">
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/headerCard"
@@ -45,7 +49,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="20dp"
-                android:hint="@string/registration_hint">
+                android:hint="@string/registration_hint"
+                app:boxStrokeColor="@color/seed"
+                app:hintTextColor="@color/seed">
 
                 <com.google.android.material.textfield.TextInputEditText
                     android:id="@+id/registrationInput"
@@ -54,7 +60,9 @@
                     android:imeOptions="actionSearch"
                     android:inputType="textCapCharacters"
                     android:maxLength="15"
-                    android:singleLine="true" />
+                    android:singleLine="true"
+                    android:textColor="@android:color/black"
+                    android:textColorHint="#6B7280" />
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.button.MaterialButton
@@ -70,7 +78,7 @@
         android:id="@+id/summaryCard"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginTop="14dp"
+        android:layout_marginTop="16dp"
         android:visibility="gone"
         app:cardBackgroundColor="@android:color/white"
         app:cardCornerRadius="22dp"
@@ -91,12 +99,13 @@
                 android:layout_height="wrap_content"
                 android:text="@string/status_idle"
                 android:textColor="@color/seed"
+                android:textSize="18sp"
                 android:textStyle="bold" />
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="12dp"
+                android:layout_marginTop="14dp"
                 android:orientation="horizontal"
                 android:weightSum="3">
 
@@ -119,6 +128,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="-"
+                        android:textColor="@color/seed_dark"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -141,6 +152,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="0"
+                        android:textColor="@color/seed_dark"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
                 </LinearLayout>
 
@@ -163,6 +176,8 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="4dp"
                         android:text="-"
+                        android:textColor="@color/seed_dark"
+                        android:textSize="17sp"
                         android:textStyle="bold" />
                 </LinearLayout>
             </LinearLayout>
@@ -173,7 +188,7 @@
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="18dp"
         android:visibility="gone"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/summaryCard" />
@@ -195,9 +210,9 @@
         android:id="@+id/resultsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_marginTop="16dp"
+        android:layout_marginTop="18dp"
         android:clipToPadding="false"
-        android:paddingBottom="20dp"
+        android:paddingBottom="24dp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
