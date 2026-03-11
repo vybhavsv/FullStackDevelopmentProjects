@@ -7,8 +7,10 @@ import okhttp3.OkHttpClient
 import okhttp3.Request
 import org.jsoup.Jsoup
 import org.jsoup.nodes.Document
+import java.io.IOException
 import java.security.SecureRandom
 import java.security.cert.X509Certificate
+import java.util.concurrent.TimeUnit
 import javax.net.ssl.HostnameVerifier
 import javax.net.ssl.SSLContext
 import javax.net.ssl.TrustManager
@@ -48,38 +50,58 @@ class VehicleLookupRepository {
     }
 
     private fun fetchRecords(registrationNumber: String, fuelType: FuelType): List<PucRecord> {
-        val initialRequest = Request.Builder().url(sourceUrl).get().build()
-        val initialHtml = client.newCall(initialRequest).execute().use { response ->
-            if (!response.isSuccessful) error("Initial request failed: ${response.code}")
-            response.body?.string().orEmpty()
+        var lastError: Exception? = null
+
+        repeat(3) {
+            try {
+                val initialRequest = Request.Builder()
+                    .url(sourceUrl)
+                    .get()
+                    .header("User-Agent", USER_AGENT)
+                    .header("Accept", "text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8")
+                    .build()
+
+                val initialHtml = client.newCall(initialRequest).execute().use { response ->
+                    if (!response.isSuccessful) error("Initial request failed: ${response.code}")
+                    response.body?.string().orEmpty()
+                }
+
+                val initialDocument = Jsoup.parse(initialHtml, sourceUrl)
+                val viewState = initialDocument.selectFirst("input[name=__VIEWSTATE]")?.attr("value").orEmpty()
+                val viewStateGenerator = initialDocument.selectFirst("input[name=__VIEWSTATEGENERATOR]")?.attr("value").orEmpty()
+                val eventValidation = initialDocument.selectFirst("input[name=__EVENTVALIDATION]")?.attr("value").orEmpty()
+
+                val formBody = FormBody.Builder()
+                    .add("__VIEWSTATE", viewState)
+                    .add("__VIEWSTATEGENERATOR", viewStateGenerator)
+                    .add("__EVENTVALIDATION", eventValidation)
+                    .add("Sreg", registrationNumber)
+                    .add("Veh_Type", fuelType.code)
+                    .add("Button1", "Search")
+                    .build()
+
+                val responseRequest = Request.Builder()
+                    .url(sourceUrl)
+                    .post(formBody)
+                    .header("User-Agent", USER_AGENT)
+                    .header("Origin", "https://etc.karnataka.gov.in")
+                    .header("Referer", sourceUrl)
+                    .build()
+
+                val responseHtml = client.newCall(responseRequest).execute().use { response ->
+                    if (!response.isSuccessful) error("Lookup request failed: ${response.code}")
+                    response.body?.string().orEmpty()
+                }
+
+                val responseDocument = Jsoup.parse(responseHtml, sourceUrl)
+                return parseTable(responseDocument, fuelType.tableId)
+            } catch (exception: Exception) {
+                lastError = exception
+                Thread.sleep(700)
+            }
         }
 
-        val initialDocument = Jsoup.parse(initialHtml, sourceUrl)
-        val viewState = initialDocument.selectFirst("input[name=__VIEWSTATE]")?.attr("value").orEmpty()
-        val viewStateGenerator = initialDocument.selectFirst("input[name=__VIEWSTATEGENERATOR]")?.attr("value").orEmpty()
-        val eventValidation = initialDocument.selectFirst("input[name=__EVENTVALIDATION]")?.attr("value").orEmpty()
-
-        val formBody = FormBody.Builder()
-            .add("__VIEWSTATE", viewState)
-            .add("__VIEWSTATEGENERATOR", viewStateGenerator)
-            .add("__EVENTVALIDATION", eventValidation)
-            .add("Sreg", registrationNumber)
-            .add("Veh_Type", fuelType.code)
-            .add("Button1", "Search")
-            .build()
-
-        val responseRequest = Request.Builder()
-            .url(sourceUrl)
-            .post(formBody)
-            .build()
-
-        val responseHtml = client.newCall(responseRequest).execute().use { response ->
-            if (!response.isSuccessful) error("Lookup request failed: ${response.code}")
-            response.body?.string().orEmpty()
-        }
-
-        val responseDocument = Jsoup.parse(responseHtml, sourceUrl)
-        return parseTable(responseDocument, fuelType.tableId)
+        throw IOException(lastError?.message ?: "The Karnataka source could not be reached right now.", lastError)
     }
 
     private fun parseTable(document: Document, tableId: String): List<PucRecord> {
@@ -123,6 +145,15 @@ class VehicleLookupRepository {
         return OkHttpClient.Builder()
             .sslSocketFactory(sslContext.socketFactory, trustAllCertificates)
             .hostnameVerifier(HostnameVerifier { _, _ -> true })
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .retryOnConnectionFailure(true)
             .build()
+    }
+
+    companion object {
+        private const val USER_AGENT =
+            "Mozilla/5.0 (Linux; Android 14; Mobile) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Mobile Safari/537.36"
     }
 }
