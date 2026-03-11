@@ -26,8 +26,8 @@ FUEL_OPTIONS = {
 }
 
 MANIFEST_JSON = """{
-  \"name\": \"Karnataka Vehicle Validation\",
-  \"short_name\": \"Vehicle Check\",
+  \"name\": \"KA-Vehicle-PUC-Check\",
+  \"short_name\": \"KA-Vehicle-PUC-Check\",
   \"start_url\": \"/\",
   \"display\": \"standalone\",
   \"background_color\": \"#eef4ef\",
@@ -342,10 +342,10 @@ def render_page(registration: str = '', error: str = '', lookup: Optional[dict[s
       <meta name="theme-color" content="#155e4b">
       <meta name="apple-mobile-web-app-capable" content="yes">
       <meta name="apple-mobile-web-app-status-bar-style" content="default">
-      <meta name="apple-mobile-web-app-title" content="Vehicle Check">
+      <meta name="apple-mobile-web-app-title" content="KA-Vehicle-PUC-Check">
       <link rel="manifest" href="/manifest.webmanifest">
       <link rel="icon" href="/static/icon-192.png">
-      <title>Karnataka Vehicle Validation</title>
+      <title>KA-Vehicle-PUC-Check</title>
       <style>
         :root {{
           --bg: #eef4ef;
@@ -423,7 +423,7 @@ def render_page(registration: str = '', error: str = '', lookup: Optional[dict[s
       <main class="shell">
         <section class="hero">
           <p class="eyebrow">Welcome</p>
-          <h1>Vehicle Validation Checker</h1>
+          <h1>KA-Vehicle-PUC-Check</h1>
           <p>Enter a Karnataka vehicle registration number and the app will search the Transport Department page automatically. It checks Petrol first, falls back to Diesel if needed, and shows the result directly here.</p>
           {error_html}
           <form method="post" action="/search">
@@ -548,4 +548,5 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
+
 

@@ -11,7 +11,7 @@ def main() -> None:
     thread.start()
     time.sleep(1)
     webbrowser.open(f'http://{HOST}:{PORT}')
-    print(f'Karnataka Vehicle Validation is running at http://{HOST}:{PORT}')
+    print(f'KA-Vehicle-PUC-Check is running at http://{HOST}:{PORT}')
     print('Close this window to stop the app.')
 
     try:
@@ -26,3 +26,4 @@ def main() -> None:
 
 if __name__ == '__main__':
     main()
+

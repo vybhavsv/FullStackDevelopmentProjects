@@ -1,4 +1,4 @@
-# Karnataka Vehicle Validation App
+# KA-Vehicle-PUC-Check App
 
 This project now supports three ways to use the same app:
 
@@ -39,8 +39,9 @@ python -m pip install -r requirements.txt
 build_exe.bat
 ```
 
-The executable will be created in `dist\KarnatakaVehicleChecker.exe`.
+The executable will be created in `dist\KA-Vehicle-PUC-Check.exe`.
 
 ## Important note
 
 The Karnataka source website currently presents a certificate issue on this machine, so the app disables TLS verification for that upstream request.
+

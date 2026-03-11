@@ -1,6 +1,6 @@
 # Native Android Project
 
-This Android Studio project is a native Kotlin app for the Karnataka Vehicle Validation flow.
+This Android Studio project is a native Kotlin app for the KA-Vehicle-PUC-Check flow.
 
 ## Included
 
@@ -30,3 +30,4 @@ The latest debug APK was built successfully at:
 ## Important note
 
 The Karnataka source site currently has a certificate problem, so this Android app uses the same unsafe TLS workaround as the desktop app to keep the live lookup working.
+
