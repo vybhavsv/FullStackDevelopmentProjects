@@ -44,15 +44,15 @@ class ResultAdapter : RecyclerView.Adapter<ResultAdapter.ResultViewHolder>() {
                 }
             )
             binding.detailText.text = buildString {
-                appendLine("Reg Date: ${record.registrationDate}")
-                appendLine("Test Date: ${record.testDate} ${record.testTime}".trim())
-                appendLine("Valid Date: ${record.validDate}")
-                appendLine("HSU Mean: ${record.hsuMean}")
-                appendLine("K Mean: ${record.kMean}")
-                appendLine("Oil Temp: ${record.oilTempMean}")
-                appendLine("RPM Max: ${record.rpmMaxMean}")
-                appendLine("RPM Min: ${record.rpmMinMean}")
-                append("Cancelled: ${record.cancelled}")
+                appendAlignedLine("Reg Date", record.registrationDate)
+                appendAlignedLine("Test Date", "${record.testDate} ${record.testTime}".trim())
+                appendAlignedLine("Valid Date", record.validDate)
+                appendAlignedLine("HSU Mean", record.hsuMean)
+                appendAlignedLine("K Mean", record.kMean)
+                appendAlignedLine("Oil Temp", record.oilTempMean)
+                appendAlignedLine("RPM Max", record.rpmMaxMean)
+                appendAlignedLine("RPM Min", record.rpmMinMean)
+                appendAlignedLine("Cancelled", record.cancelled, appendNewLine = false)
             }
 
             if (record.detailsUrl.isNotBlank()) {
@@ -63,6 +63,13 @@ class ResultAdapter : RecyclerView.Adapter<ResultAdapter.ResultViewHolder>() {
             } else {
                 binding.root.setOnClickListener(null)
             }
+        }
+
+        private fun StringBuilder.appendAlignedLine(label: String, value: String, appendNewLine: Boolean = true) {
+            append(label.padEnd(10, ' '))
+            append(": ")
+            append(value.ifBlank { "-" })
+            if (appendNewLine) appendLine()
         }
     }
 }
