@@ -1,7 +1,11 @@
 <resources>
-    <color name="seed">#155E4B</color>
-    <color name="seed_dark">#0F3F33</color>
-    <color name="surface_soft">#EEF4EF</color>
+    <color name="seed">#165C4A</color>
+    <color name="seed_dark">#102F28</color>
+    <color name="surface_soft">#F4F6F1</color>
+    <color name="panel_surface">#FFFEFC</color>
+    <color name="outline_soft">#D8E1DB</color>
+    <color name="text_muted">#5F6F69</color>
+    <color name="chip_surface">#E3F0E7</color>
     <color name="status_positive">#0F766E</color>
     <color name="status_warning">#B45309</color>
     <color name="status_error">#B42318</color>
