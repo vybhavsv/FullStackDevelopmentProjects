@@ -1,0 +1,15 @@
+<resources>
+    <string name="app_name">Vehicle Validation</string>
+    <string name="welcome_title">Karnataka Vehicle Validation</string>
+    <string name="welcome_subtitle">Enter a registration number and the app will check Petrol first, then Diesel automatically if needed.</string>
+    <string name="registration_hint">Vehicle registration number</string>
+    <string name="check_vehicle">Check Vehicle</string>
+    <string name="results_title">Results</string>
+    <string name="status_idle">Ready to search</string>
+    <string name="status_loading">Checking Karnataka source…</string>
+    <string name="status_no_match">No records found for Petrol or Diesel.</string>
+    <string name="status_error">The Karnataka source could not be reached right now.</string>
+    <string name="summary_matched">Matched fuel type</string>
+    <string name="summary_records">Records found</string>
+    <string name="summary_valid_date">Top valid date</string>
+</resources>

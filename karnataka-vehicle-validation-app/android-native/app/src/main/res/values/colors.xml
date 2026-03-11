@@ -1,0 +1,8 @@
+<resources>
+    <color name="seed">#155E4B</color>
+    <color name="seed_dark">#0F3F33</color>
+    <color name="surface_soft">#EEF4EF</color>
+    <color name="status_positive">#0F766E</color>
+    <color name="status_warning">#B45309</color>
+    <color name="status_error">#B42318</color>
+</resources>
