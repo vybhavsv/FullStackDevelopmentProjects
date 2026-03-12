@@ -1,7 +1,11 @@
 package com.vybhav.karnatakavehiclevalidation
 
 import android.os.Bundle
+import android.text.method.LinkMovementMethod
+import android.view.LayoutInflater
 import android.view.inputmethod.EditorInfo
+import android.widget.CheckBox
+import android.widget.TextView
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.view.ViewCompat
@@ -9,6 +13,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.isVisible
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.google.android.material.dialog.MaterialAlertDialogBuilder
 import com.vybhav.karnatakavehiclevalidation.data.VehicleLookupRepository
 import com.vybhav.karnatakavehiclevalidation.data.VehicleLookupResult
 import com.vybhav.karnatakavehiclevalidation.databinding.ActivityMainBinding
@@ -43,6 +48,7 @@ class MainActivity : AppCompatActivity() {
         }
 
         setIdleState()
+        showDisclaimerIfNeeded()
     }
 
     private fun performLookup() {
@@ -107,6 +113,31 @@ class MainActivity : AppCompatActivity() {
         }
     }
 
+    private fun showDisclaimerIfNeeded() {
+        val prefs = getSharedPreferences(PREFS_NAME, MODE_PRIVATE)
+        if (prefs.getBoolean(KEY_HIDE_DISCLAIMER, false)) {
+            return
+        }
+
+        val dialogView = LayoutInflater.from(this).inflate(R.layout.dialog_disclaimer, null)
+        val messageView = dialogView.findViewById<TextView>(R.id.disclaimerMessage)
+        val checkbox = dialogView.findViewById<CheckBox>(R.id.disclaimerCheckbox)
+        messageView.text = getString(R.string.disclaimer_message)
+        messageView.movementMethod = LinkMovementMethod.getInstance()
+
+        MaterialAlertDialogBuilder(this)
+            .setTitle(R.string.disclaimer_title)
+            .setView(dialogView)
+            .setCancelable(false)
+            .setPositiveButton(R.string.disclaimer_ok) { dialog, _ ->
+                if (checkbox.isChecked) {
+                    prefs.edit().putBoolean(KEY_HIDE_DISCLAIMER, true).apply()
+                }
+                dialog.dismiss()
+            }
+            .show()
+    }
+
     private fun applyWindowInsets() {
         val horizontalPadding = (16 * resources.displayMetrics.density).toInt()
         val bottomPadding = (16 * resources.displayMetrics.density).toInt()
@@ -122,5 +153,10 @@ class MainActivity : AppCompatActivity() {
             )
             insets
         }
+    }
+
+    companion object {
+        private const val PREFS_NAME = "ka_vehicle_puc_prefs"
+        private const val KEY_HIDE_DISCLAIMER = "hide_disclaimer"
     }
 }

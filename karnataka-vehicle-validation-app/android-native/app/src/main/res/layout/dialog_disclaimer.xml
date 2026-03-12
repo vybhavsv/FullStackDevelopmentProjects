@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:paddingTop="8dp">
+
+    <TextView
+        android:id="@+id/disclaimerMessage"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:autoLink="web"
+        android:lineSpacingExtra="4dp"
+        android:linksClickable="true"
+        android:textColor="#23312E"
+        android:textSize="16sp" />
+
+    <CheckBox
+        android:id="@+id/disclaimerCheckbox"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="18dp"
+        android:text="@string/disclaimer_checkbox"
+        android:textColor="#23312E" />
+</LinearLayout>

@@ -12,5 +12,8 @@
     <string name="summary_matched">Matched fuel type</string>
     <string name="summary_records">Records found</string>
     <string name="summary_valid_date">Top valid date</string>
+    <string name="disclaimer_title">Disclaimer</string>
+    <string name="disclaimer_message">This app is an independent project and is not affiliated with or endorsed by any government entity. The information provided is based on publicly available data from https://etc.karnataka.gov.in/ReportingUser/Scgr1.aspx and https://karnataka.gov.in.</string>
+    <string name="disclaimer_checkbox">Do not show this message again</string>
+    <string name="disclaimer_ok">OK</string>
 </resources>
-
